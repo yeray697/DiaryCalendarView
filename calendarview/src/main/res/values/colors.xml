@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryLight">#bbdefb</color>
+    <color name="colorPrimary">#90CAF9</color>
+    <color name="colorPrimaryDark">#64B5F6</color>
+    <color name="selectedEventColor">@color/colorPrimaryDark</color>
+</resources>
