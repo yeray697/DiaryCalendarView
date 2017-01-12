@@ -3,5 +3,4 @@
     <color name="colorPrimaryLight">#bbdefb</color>
     <color name="colorPrimary">#90CAF9</color>
     <color name="colorPrimaryDark">#64B5F6</color>
-    <color name="selectedEventColor">@color/colorPrimaryDark</color>
 </resources>
