@@ -48,7 +48,7 @@ public class CalendarView extends RelativeLayout {
 
         // Setup caldroid fragment
         // **** If you want normal CaldroidFragment, use below line ****
-        caldroidFragment = new CaldroidFragment();
+        caldroidFragment = new CaldroidSampleCustomFragment();
 
         // //////////////////////////////////////////////////////////////////////
         // **** This is to show customized fragment. If you want customized
@@ -76,7 +76,10 @@ public class CalendarView extends RelativeLayout {
             CaldroidFragment.MONDAY); // Tuesday
 
             // Uncomment this line to use Caldroid in compact mode
-             args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
+            args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
+
+
+        args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
 
             caldroidFragment.setArguments(args);
         //}
@@ -156,8 +159,8 @@ public class CalendarView extends RelativeLayout {
         Date greenDate = cal.getTime();
 
         if (caldroidFragment != null) {
-            ColorDrawable blue = new ColorDrawable(getResources().getColor(android.R.color.holo_blue_light));
-            ColorDrawable green = new ColorDrawable(Color.GREEN);
+            ColorDrawable blue = new ColorDrawable(Color.parseColor("#FFD9A3"));
+            ColorDrawable green = new ColorDrawable(Color.parseColor("#A3E0FF"));
             caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
             caldroidFragment.setBackgroundDrawableForDate(green, greenDate);
             caldroidFragment.setTextColorForDate(android.R.color.white, blueDate);
