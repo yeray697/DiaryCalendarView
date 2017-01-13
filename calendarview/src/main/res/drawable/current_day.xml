@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:bottom="@dimen/radio_calendar_day"
+        android:top="@dimen/radio_calendar_day"
+        android:right="@dimen/radio_calendar_day"
+        android:left="@dimen/radio_calendar_day">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval">
+            <corners android:radius="10dip"/>
+            <stroke android:color="@color/current_day" android:width="@dimen/border_day_size"/>
+            <solid android:color="@color/current_day"/>
+        </shape>
+    </item>
+</layer-list>

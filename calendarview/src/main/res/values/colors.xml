@@ -3,4 +3,9 @@
     <color name="colorPrimaryLight">#bbdefb</color>
     <color name="colorPrimary">#90CAF9</color>
     <color name="colorPrimaryDark">#64B5F6</color>
+    <color name="not_current_month_color">#1a00d0ff</color>
+    <color name="selected_day">#64B5F6</color>
+    <color name="normal_day">#64B5F6</color>
+    <color name="calendar_background">#bbdefb</color>
+    <color name="current_day" >#fcb37b</color>
 </resources>

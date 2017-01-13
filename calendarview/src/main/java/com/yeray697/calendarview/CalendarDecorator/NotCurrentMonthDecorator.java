@@ -1,37 +1,43 @@
-package com.yeray697.calendarview;
+package com.yeray697.calendarview.CalendarDecorator;
 
-import android.graphics.Typeface;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.yeray697.calendarview.R;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Decorate a day by making the text big and bold
+ * Highlight Saturdays and Sundays with a background
  */
-public class OneDayDecorator implements DayViewDecorator {
+public class NotCurrentMonthDecorator implements DayViewDecorator {
 
     private CalendarDay date;
 
-    public OneDayDecorator() {
+    private final Calendar calendar = Calendar.getInstance();
+    private final Drawable highlightDrawable;
+
+    public NotCurrentMonthDecorator(Activity context) {
         date = CalendarDay.today();
+        highlightDrawable = context.getResources().getDrawable(R.drawable.circle_not_current_month_day);
     }
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        return date != null && day.equals(date);
+        return date != null && day.getMonth() != date.getMonth();
     }
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new StyleSpan(Typeface.BOLD));
-        view.addSpan(new RelativeSizeSpan(1.4f));
+        view.setBackgroundDrawable(highlightDrawable);
     }
+
 
     /**
      * We're changing the internals, so make sure to call {@linkplain MaterialCalendarView#invalidateDecorators()}

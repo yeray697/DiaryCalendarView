@@ -1,4 +1,4 @@
-package com.yeray697.calendarview;
+package com.yeray697.calendarview.CalendarDecorator;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;

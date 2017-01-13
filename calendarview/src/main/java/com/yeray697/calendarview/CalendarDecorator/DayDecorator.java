@@ -1,21 +1,24 @@
-package com.yeray697.calendarview;
+package com.yeray697.calendarview.CalendarDecorator;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.yeray697.calendarview.R;
 
 /**
  * Use a custom selector
  */
-public class MySelectorDecorator implements DayViewDecorator {
+public class DayDecorator implements DayViewDecorator {
 
     private final Drawable drawable;
 
-    public MySelectorDecorator(Activity context) {
-        drawable = context.getResources().getDrawable(android.R.drawable.ic_btn_speak_now);
+    public DayDecorator(Activity context) {
+        drawable = context.getResources().getDrawable(R.drawable.circle_day);
     }
 
     @Override

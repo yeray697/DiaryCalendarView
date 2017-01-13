@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mcv_showOtherDates="all"
-        app:mcv_selectionColor="#00F"
+        android:background="@color/calendar_background"
+        app:mcv_firstDayOfWeek="monday"
         />
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

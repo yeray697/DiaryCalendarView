@@ -3,7 +3,6 @@ package com.yeray697.calendarview;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -17,10 +16,15 @@ import android.widget.RelativeLayout;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.yeray697.calendarview.CalendarDecorator.CurrentDayDecorator;
+import com.yeray697.calendarview.CalendarDecorator.DayDecorator;
+import com.yeray697.calendarview.CalendarDecorator.EventDecorator;
+import com.yeray697.calendarview.CalendarDecorator.NotCurrentMonthDecorator;
+import com.yeray697.calendarview.CalendarDecorator.SelectedDayDecorator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -28,9 +32,10 @@ import java.util.concurrent.Executors;
  * Created by yeray697 on 9/01/17.
  */
 
-public class CalendarView extends RelativeLayout implements OnDateSelectedListener {
+public class CalendarView extends RelativeLayout implements OnDateSelectedListener, OnMonthChangedListener {
 
-    private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
+    private final SelectedDayDecorator selectedDayDecorator = new SelectedDayDecorator((Activity)this.getContext());
+    private final NotCurrentMonthDecorator notCurrentMonthDecorator = new NotCurrentMonthDecorator((Activity)this.getContext());
 
     private RecyclerView recyclerView;
     private CalendarAdapter adapter;
@@ -49,28 +54,16 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
         calendar = (MaterialCalendarView) findViewById(R.id.calendarview);
         //calendar.setSelectionColor(Color.YELLOW);
         calendar.setOnDateChangedListener(this);
+        calendar.setOnMonthChangedListener(this);
         calendar.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
-
-        Calendar instance = Calendar.getInstance();
-        calendar.setSelectedDate(instance.getTime());
-
-        Calendar instance1 = Calendar.getInstance();
-        instance1.set(instance1.get(Calendar.YEAR), Calendar.JANUARY, 1);
-
-        Calendar instance2 = Calendar.getInstance();
-        instance2.set(instance2.get(Calendar.YEAR), Calendar.DECEMBER, 31);
-
-        calendar.state().edit()
-                .setMinimumDate(instance1.getTime())
-                .setMaximumDate(instance2.getTime())
-                .commit();
-
         calendar.addDecorators(
-                new MySelectorDecorator((Activity)this.getContext()),
-                new HighlightWeekendsDecorator(Color.parseColor("#2253CDFF")),
-                oneDayDecorator
+                new DayDecorator((Activity)this.getContext()),
+                notCurrentMonthDecorator,
+                selectedDayDecorator,
+                new CurrentDayDecorator((Activity)this.getContext())
         );
-
+        calendar.day
+        calendar.setTopbarVisible(false);
         new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
     }
 
@@ -96,9 +89,17 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //If you change a decorate, you need to invalidate decorators
-        oneDayDecorator.setDate(date.getDate());
+        selectedDayDecorator.setDate(date.getDate());
         widget.invalidateDecorators();
     }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        //If you change a decorate, you need to invalidate decorators
+        notCurrentMonthDecorator.setDate(date.getDate());
+        widget.invalidateDecorators();
+    }
+
     /**
      * Simulate an API call to show how to add decorators
      */
