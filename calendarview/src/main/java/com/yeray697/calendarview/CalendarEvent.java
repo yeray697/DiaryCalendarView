@@ -1,5 +1,8 @@
 package com.yeray697.calendarview;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -9,7 +12,7 @@ import java.util.Date;
  * Created by yeray697 on 14/01/17.
  */
 
-public class CalendarEvent {
+public class CalendarEvent implements Parcelable {
     public static Comparator<? super CalendarEvent> comparator = new Comparator<CalendarEvent>() {
         @Override
         public int compare(CalendarEvent o1, CalendarEvent o2) {
@@ -33,6 +36,26 @@ public class CalendarEvent {
         this.day = day;
         this.description = description;
     }
+
+    protected CalendarEvent(Parcel in) {
+        title = in.readString();
+        year = in.readInt();
+        month = in.readInt();
+        day = in.readInt();
+        description = in.readString();
+    }
+
+    public static final Creator<CalendarEvent> CREATOR = new Creator<CalendarEvent>() {
+        @Override
+        public CalendarEvent createFromParcel(Parcel in) {
+            return new CalendarEvent(in);
+        }
+
+        @Override
+        public CalendarEvent[] newArray(int size) {
+            return new CalendarEvent[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -76,5 +99,19 @@ public class CalendarEvent {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeInt(year);
+        dest.writeInt(month);
+        dest.writeInt(day);
+        dest.writeString(description);
     }
 }

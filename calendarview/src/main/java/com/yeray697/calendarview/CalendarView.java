@@ -36,7 +36,7 @@ import java.util.Calendar;
  * Created by yeray697 on 9/01/17.
  */
 
-public class CalendarView extends RelativeLayout implements OnDateSelectedListener {
+public class CalendarView extends RelativeLayout {
 
     private final SelectedDayDecorator selectedDayDecorator = new SelectedDayDecorator((Activity)this.getContext());
 
@@ -82,7 +82,18 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
         ivDate = (ImageView) findViewById(R.id.ivDate_calendar);
         calendar = (MaterialCalendarView) findViewById(R.id.calendarview);
         rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        calendar.setOnDateChangedListener(this);
+        calendar.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                //If you change a decorate, you need to invalidate decorators
+                selectedDayDecorator.setDate(date.getDate());
+                widget.invalidateDecorators();
+                int position = checkDates(date);
+                if (position != -1)
+                    rvEvents.getLayoutManager().scrollToPosition(position);
+                setSelectedEvent(position);
+            }
+        });
         this.events = new ArrayList<>();
         calendar.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
@@ -114,16 +125,6 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
         rvEvents.setAdapter(adapter);
     }
 
-    @Override
-    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-        //If you change a decorate, you need to invalidate decorators
-        selectedDayDecorator.setDate(date.getDate());
-        widget.invalidateDecorators();
-        int position = checkDates(date);
-        if (position != -1)
-            rvEvents.getLayoutManager().scrollToPosition(position);
-        setSelectedEvent(position);
-    }
     private int checkDates(CalendarDay dateClicked) {
         SimpleDateFormat dfDate = new SimpleDateFormat("d/m/yyyy");
 
@@ -149,6 +150,7 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
 
         return result;
     }
+
     private void setSelectedEvent(int position){
         int lastPosition = adapter.getSelectedEvent();
         RecyclerView.ViewHolder lastViewHolder = rvEvents.findViewHolderForAdapterPosition(lastPosition);
@@ -192,5 +194,9 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
 
     public MaterialCalendarView getCalendar() {
         return calendar;
+    }
+
+    public Toolbar getToolbar(){
+        return toolbar;
     }
 }

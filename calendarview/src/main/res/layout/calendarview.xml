@@ -34,14 +34,11 @@
     </android.support.v7.widget.Toolbar>
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:layout_below="@id/toolbar_calendar"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mcv_showOtherDates="all"
         android:background="@color/calendar_background"
-        android:elevation="5dp"
-        app:mcv_firstDayOfWeek="monday"/>
+        android:elevation="5dp"/>
     <android.support.v7.widget.RecyclerView
         android:layout_below="@id/toolbar_calendar"
         android:layout_width="match_parent"
