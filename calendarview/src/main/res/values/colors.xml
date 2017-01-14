@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryLight">#bbdefb</color>
-    <color name="colorPrimary">#90CAF9</color>
-    <color name="colorPrimaryDark">#64B5F6</color>
-    <color name="not_current_month_color">#1a00d0ff</color>
-    <color name="selected_day">#64B5F6</color>
-    <color name="normal_day">#64B5F6</color>
-    <color name="calendar_background">#bbdefb</color>
-    <color name="current_day" >#fcb37b</color>
+    <color name="selected_day">#4484d2</color>
+    <color name="calendar_background">#6db6f1</color>
+    <color name="current_day" >#FF4081</color>
+    <color name="expandColor">#1a57ff</color>
+    <color name="background_item_not_expanded">#7124f9</color>
+    <color name="background_item_expanded">#9663ef</color>
 </resources>

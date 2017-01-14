@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/expandColor"/>
+        </shape>
+    </item>
+    <item android:drawable="@mipmap/ic_expand" />
+
+</layer-list>

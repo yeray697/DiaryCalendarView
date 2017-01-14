@@ -31,6 +31,5 @@ public class CurrentDayDecorator implements DayViewDecorator {
     public void decorate(DayViewFacade view) {
         view.setSelectionDrawable(drawable);
         view.addSpan(new StyleSpan(Typeface.BOLD));
-        view.addSpan(new RelativeSizeSpan(1.4f));
     }
 }
