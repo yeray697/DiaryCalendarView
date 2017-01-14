@@ -2,28 +2,35 @@ package com.yeray697.calendarview;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.yeray697.calendarview.CalendarDecorator.CurrentDayDecorator;
 import com.yeray697.calendarview.CalendarDecorator.EventDecorator;
 import com.yeray697.calendarview.CalendarDecorator.SelectedDayDecorator;
 
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by yeray697 on 9/01/17.
@@ -34,59 +41,20 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
     private final SelectedDayDecorator selectedDayDecorator = new SelectedDayDecorator((Activity)this.getContext());
 
 
-    private ImageView ivExpandCollapse;
-    MaterialCalendarView calendar;
-    RecyclerView rvEvents;
+    private MaterialCalendarView calendar;
+    private RecyclerView rvEvents;
+    private Toolbar toolbar;
+    private LinearLayout llDate;
+    private ImageView ivDate;
+    private TextView tvDate;
 
     private float initialYimageView;
+    private ArrayList<CalendarEvent> events;
+
+    CalendarAdapter adapter;
 
     public CalendarView(Context context) {
         super(context,null);
-    }
-
-    private void inflateView() {
-        final View view = LayoutInflater.from(getContext()).inflate(R.layout.calendarview,this,true);
-        rvEvents = (RecyclerView) view.findViewById(R.id.rvCalendar);
-        ivExpandCollapse = (ImageView) findViewById(R.id.ivExpandCollapse);
-        calendar = (MaterialCalendarView) findViewById(R.id.calendarview);
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        calendar.setOnDateChangedListener(this);
-        calendar.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
-        calendar.addDecorators(
-                selectedDayDecorator,
-                new CurrentDayDecorator((Activity)this.getContext())
-        );
-        calendar.setTopbarVisible(false);
-        calendar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                calculateImagePosition();
-                ivExpandCollapse.setY(initialYimageView);
-                calendar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
-        ivExpandCollapse.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int rotation = 180;
-                if (ivExpandCollapse.getRotation() == rotation) {
-                    rotation = 0;
-                    ViewAnimationUtils.expandCalendar(calendar,ivExpandCollapse,initialYimageView);
-                } else
-                    ViewAnimationUtils.collapseCalendar(calendar,ivExpandCollapse);
-                ivExpandCollapse.animate().rotation(rotation).start();
-            }
-        });
-        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_PORTRAIT) {
-        }
-    }
-
-    private void calculateImagePosition() {
-        initialYimageView = calendar.getHeight() - (ivExpandCollapse.getHeight() / 2);
-    }
-
-    public MaterialCalendarView getCalendar() {
-        return calendar;
     }
 
     public CalendarView(Context context, AttributeSet attrs) {
@@ -105,14 +73,98 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
         inflateView();
     }
 
+    private void inflateView() {
+        final View view = LayoutInflater.from(getContext()).inflate(R.layout.calendarview,this,true);
+        rvEvents = (RecyclerView) view.findViewById(R.id.rvCalendar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_calendar);
+        llDate = (LinearLayout) findViewById(R.id.llDate_calendar);
+        tvDate = (TextView) findViewById(R.id.tvDate_calendar);
+        ivDate = (ImageView) findViewById(R.id.ivDate_calendar);
+        calendar = (MaterialCalendarView) findViewById(R.id.calendarview);
+        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+        calendar.setOnDateChangedListener(this);
+        this.events = new ArrayList<>();
+        calendar.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                currentMonth();
+            }
+        });
+        calendar.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
+        calendar.addDecorators(
+                selectedDayDecorator,
+                new CurrentDayDecorator((Activity)this.getContext())
+        );
+        calendar.setTopbarVisible(false);
+        llDate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int rotation = 0;
+                if (ivDate.getRotation() == rotation) {
+                    rotation = 180;
+                    ViewAnimationUtils.collapse(calendar,500);
+                } else
+                    ViewAnimationUtils.expand(calendar,500);
+                ivDate.animate().rotation(rotation).start();
+            }
+        });
+        currentMonth();
+
+        adapter = new CalendarAdapter(getContext(), events);
+        rvEvents.setAdapter(adapter);
+    }
+
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //If you change a decorate, you need to invalidate decorators
         selectedDayDecorator.setDate(date.getDate());
         widget.invalidateDecorators();
+        int position = checkDates(date);
+        if (position != -1)
+            rvEvents.getLayoutManager().scrollToPosition(position);
+        setSelectedEvent(position);
+    }
+    private int checkDates(CalendarDay dateClicked) {
+        SimpleDateFormat dfDate = new SimpleDateFormat("d/m/yyyy");
+
+        boolean isToday;
+        int result = -1;
+        int position = 0;
+        for (CalendarEvent event: events) {
+            try {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dfDate.parse(event.getDate()));
+                isToday = dateClicked.getYear() == event.getYear() && dateClicked.getMonth() == event.getMonth() && dateClicked.getDay() == event.getDay();
+                if (isToday) {
+                    result = position;  // If start date is before end date.
+                    break;
+                } else {
+                    position ++;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return result;
+    }
+    private void setSelectedEvent(int position){
+        int lastPosition = adapter.getSelectedEvent();
+        RecyclerView.ViewHolder lastViewHolder = rvEvents.findViewHolderForAdapterPosition(lastPosition);
+        View lastView = null;
+        if (lastViewHolder != null)
+            lastView = lastViewHolder.itemView;
+
+        RecyclerView.ViewHolder currentViewHolder = rvEvents.findViewHolderForAdapterPosition(position);
+        View currentView = null;
+        if (currentViewHolder != null)
+            currentView = currentViewHolder.itemView;
+        adapter.setSelectedEvent(lastPosition, lastView,position,currentView);
     }
 
-    public void addEvents(ArrayList<CalendarEvent> events, int color, int radius) {
+    public void addEvent(ArrayList<CalendarEvent> newEvents, int color, int radius) {
+        this.events.addAll(newEvents);
         ArrayList<CalendarDay> days = new ArrayList<>();
         for(CalendarEvent event:events) {
             days.add(new CalendarDay(event.getYear(),event.getMonth(),event.getDay()));
@@ -120,10 +172,25 @@ public class CalendarView extends RelativeLayout implements OnDateSelectedListen
 
         calendar.addDecorator(new EventDecorator(color,radius, days));
 
-        CalendarAdapter adapter = new CalendarAdapter(getContext(), events);
-        rvEvents.setAdapter(adapter);
+        adapter.sortEvents();
     }
+
+    public void addEvent(CalendarEvent newEvent, int color, int radius) {
+        ArrayList<CalendarEvent> event = new ArrayList<>();
+        event.add(newEvent);
+        addEvent(event, color, radius);
+    }
+
     public void setCalendar(MaterialCalendarView calendar) {
         this.calendar = calendar;
+    }
+
+    private void currentMonth() {
+        CalendarDay date = calendar.getCurrentDate();
+        tvDate.setText(new DateFormatSymbols().getMonths()[date.getMonth()]+", "+date.getYear());
+    }
+
+    public MaterialCalendarView getCalendar() {
+        return calendar;
     }
 }

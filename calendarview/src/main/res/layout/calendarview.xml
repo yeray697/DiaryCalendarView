@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_calendar"
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rvCalendar"/>
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:id="@+id/llDate_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Month"
+                android:textAllCaps="true"
+                android:id="@+id/tvDate_calendar"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/ic_expand"
+                android:scaleY="-1"
+                android:id="@+id/ivDate_calendar"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:layout_below="@id/toolbar_calendar"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mcv_showOtherDates="all"
         android:background="@color/calendar_background"
-        app:mcv_firstDayOfWeek="monday"
-        />
-    <ImageView
-        android:layout_width="@dimen/ivexpand_size"
-        android:layout_height="@dimen/ivexpand_size"
-        android:id="@+id/ivExpandCollapse"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/expand_collapse"/>
-</RelativeLayout>
+        android:elevation="5dp"
+        app:mcv_firstDayOfWeek="monday"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/toolbar_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rvCalendar"/>
+
+
+</LinearLayout>

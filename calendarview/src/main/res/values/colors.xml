@@ -6,4 +6,6 @@
     <color name="expandColor">#1a57ff</color>
     <color name="background_item_not_expanded">#7124f9</color>
     <color name="background_item_expanded">#9663ef</color>
+    <color name="selected_day_diary">#33ff00</color>
+    <color name="current_event">#FF4081</color>
 </resources>

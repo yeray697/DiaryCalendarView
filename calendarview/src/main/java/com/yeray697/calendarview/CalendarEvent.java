@@ -1,10 +1,27 @@
 package com.yeray697.calendarview;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+
 /**
  * Created by yeray697 on 14/01/17.
  */
 
 public class CalendarEvent {
+    public static Comparator<? super CalendarEvent> comparator = new Comparator<CalendarEvent>() {
+        @Override
+        public int compare(CalendarEvent o1, CalendarEvent o2) {
+            int result = Float.compare(o1.getYear(),o2.getYear());
+            if (result == 0) {
+                result = Float.compare(o1.getMonth(), o2.getMonth());
+                if (result == 0)
+                    result = Float.compare(o1.getDay(),o2.getDay());
+            }
+            return result;
+        }
+    };
     private String title;
     private int year,month,day;
     private String description;
@@ -26,7 +43,7 @@ public class CalendarEvent {
     }
 
     public String getDate() {
-        return day + "/" + month + "/" + year;
+        return String.format("%02d", day) + "/" + String.format("%02d", (month + 1)) + "/" + year;
     }
 
     public int getYear() {

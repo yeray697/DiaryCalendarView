@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CalendarView calendar = (CalendarView) findViewById(R.id.calendar);
-        calendar.addEvents(getDays(), Color.BLUE,5);
+        calendar.addEvent(getDays(), Color.BLUE,5);
+        calendar.addEvent(new CalendarEvent("Hoy",2017,0,14,""), Color.BLUE,5);
 
 
     }
