@@ -17,17 +17,18 @@ import java.util.Calendar;
 import java.util.Collections;
 
 /**
- * Created by yeray697 on 14/01/17.
+ * Adapter for {@link DiaryCalendarView}
+ * @author yeray697
  */
 
-public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder> {
+public class DiaryCalendarAdapter extends RecyclerView.Adapter<DiaryCalendarAdapter.Holder> {
 
     private  Context context;
-    ArrayList<CalendarEvent> events;
+    private ArrayList<DiaryCalendarEvent> events;
     private int selectedEvent = -1;
     private int currentEvent = -1;
 
-    public CalendarAdapter(Context context, ArrayList<CalendarEvent> events) {
+    DiaryCalendarAdapter(Context context, ArrayList<DiaryCalendarEvent> events) {
         this.events = events;
         this.context = context;
     }
@@ -39,12 +40,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
 
     @Override
     public void onBindViewHolder(final Holder holder, int position) {
-        final CalendarEvent event = events.get(position);
+        final DiaryCalendarEvent event = events.get(position);
         holder.tvTitle.setText(event.getTitle());
         holder.tvDate.setText(event.getDate());
         holder.tvDescription.setText(event.getDescription());
 
-        if (checkDates(event.getDate())) {
+        if (isToday(event.getDate())) {
             this.currentEvent = position;
             holder.rlHead.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.current_event));
         } else {
@@ -85,10 +86,20 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
         return events.size();
     }
 
-    public int getSelectedEvent() {
+    /**
+     * Get selected event
+     * @return Return selected event. -1 if there is no selected event
+     */
+    int getSelectedEvent() {
         return selectedEvent;
     }
-    private boolean checkDates(String date) {
+
+    /**
+     * Check if passed date is from today
+     * @param date Date to check
+     * @return Return true if the date is from today
+     */
+    private boolean isToday(String date) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -108,7 +119,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
 
         return result;
     }
-    public void setSelectedEvent(int lastPosition, View lastCurrentView, int selectedEvent, View currentView) {
+
+    /**
+     * Set selected event from calendar into recyclerview, higlighting the event if exists
+     * @param lastPosition Last selected event{@link DiaryCalendarAdapter#getSelectedEvent()}
+     * @param lastCurrentView Last view of selected event
+     * @param selectedEvent Selected event
+     * @param currentView View of selected event
+     */
+    void setSelectedEvent(int lastPosition, View lastCurrentView, int selectedEvent, View currentView) {
         if (lastCurrentView != null && this.selectedEvent != this.currentEvent)
             lastCurrentView.setBackgroundColor(ContextCompat.getColor(lastCurrentView.getContext(),R.color.background_item_not_expanded));
         this.selectedEvent = selectedEvent;
@@ -117,10 +136,18 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
         notifyItemChanged(lastPosition);
         notifyItemChanged(selectedEvent);
     }
-    public int getCurrentEvent() {
-        return currentEvent;
+
+    /**
+     * Sort events by date
+     */
+    void sortEvents() {
+        Collections.sort(this.events, DiaryCalendarEvent.comparator);
+        notifyDataSetChanged();
     }
 
+    /**
+     * Recyclerview' holder
+     */
     class Holder extends RecyclerView.ViewHolder {
         View root;
         RelativeLayout rlHead,rlBody;
@@ -144,9 +171,5 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
                 }
             });
         }
-    }
-    public void sortEvents() {
-        Collections.sort(this.events,CalendarEvent.comparator);
-        notifyDataSetChanged();
     }
 }

@@ -3,7 +3,6 @@ package com.yeray697.calendarview.CalendarDecorator;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -12,7 +11,8 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.yeray697.calendarview.R;
 
 /**
- * Use a custom selector
+ * Decorate a day by making the text bold and circled if date = today
+ * @author yeray697
  */
 public class CurrentDayDecorator implements DayViewDecorator {
 

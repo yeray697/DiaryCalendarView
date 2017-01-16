@@ -3,19 +3,20 @@ package com.yeray697.calendarview.CalendarDecorator;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.yeray697.calendarview.R;
 
 import java.util.Date;
 
 /**
- * Decorate a day by making the text big and bold
+ * Decorate a day by making the text big and bold and circled if it is the selected day
+ * @author yeray697
  */
 public class SelectedDayDecorator implements DayViewDecorator {
 
@@ -24,7 +25,7 @@ public class SelectedDayDecorator implements DayViewDecorator {
 
     public SelectedDayDecorator(Activity context) {
         date = CalendarDay.today();
-        drawable = context.getResources().getDrawable(R.drawable.circle_selected_day);
+        drawable = ContextCompat.getDrawable(context,R.drawable.circle_selected_day);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class SelectedDayDecorator implements DayViewDecorator {
     }
 
     /**
-     * We're changing the internals, so make sure to call {@linkplain MaterialCalendarView#invalidateDecorators()}
+     * Set selected date
      */
     public void setDate(Date date) {
         this.date = CalendarDay.from(date);

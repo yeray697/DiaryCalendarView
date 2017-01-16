@@ -1,27 +1,37 @@
 package com.yeray697.calendarview;
 
-import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
-import android.view.animation.TranslateAnimation;
-
-import java.lang.reflect.Method;
 
 /**
- * Created by yeray697 on 14/01/17.
+ * Class with methods that animate views
+ * @author yeray697
  */
-public class ViewAnimationUtils {
-    public static void expand(final View v) {
+class ViewAnimationUtils {
+    /**
+     * Expand a view from current height to WRAP_CONTENT height
+     * @param v View that will be expanded
+     */
+    static void expand(final View v) {
         expand(v,500);
     }
-    public static void collapse(final View v) {
+
+    /**
+     * Collapse a view from current height to 0
+     * @param v View that will be collapsed
+     */
+    static void collapse(final View v) {
         collapse(v,500);
     }
-    public static void expand(final View v, int duration) {
+
+    /**
+     * Expand a view from current height to WRAP_CONTENT height
+     * @param v View that will be expanded
+     * @param duration Duration of the animation
+     */
+    static void expand(final View v, int duration) {
         if (v != null) {
             Animation a;
             a = v.getAnimation();
@@ -50,7 +60,12 @@ public class ViewAnimationUtils {
         }
     }
 
-    public static void collapse(final View v, int duration) {
+    /**
+     * Collapse a view from current height to 0
+     * @param v View that will be collapsed
+     * @param duration Duration of the animation
+     */
+    static void collapse(final View v, int duration) {
         if (v != null) {
             Animation a;
             a = v.getAnimation();
@@ -81,6 +96,11 @@ public class ViewAnimationUtils {
         }
     }
 
+    /**
+     * Get the max height (wrap_content) of a view
+     * @param v View from we will get the max height
+     * @return Return the max height
+     */
     private static int getMaxHeight(View v){
         int lastHeight = v.getLayoutParams().height;
         v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

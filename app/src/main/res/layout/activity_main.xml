@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yeray697.calendar.MainActivity">
-    <com.yeray697.calendarview.CalendarView
+    <com.yeray697.calendarview.DiaryCalendarView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/calendar"/>

@@ -3,19 +3,18 @@ package com.yeray697.calendarview;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 
 /**
- * Created by yeray697 on 14/01/17.
+ * Event used in {@link DiaryCalendarView}
+ * It has a title, a date and a description
+ * It is parcelable
+ * @author yeray697
  */
-
-public class CalendarEvent implements Parcelable {
-    public static Comparator<? super CalendarEvent> comparator = new Comparator<CalendarEvent>() {
+public class DiaryCalendarEvent implements Parcelable {
+    static Comparator<? super DiaryCalendarEvent> comparator = new Comparator<DiaryCalendarEvent>() {
         @Override
-        public int compare(CalendarEvent o1, CalendarEvent o2) {
+        public int compare(DiaryCalendarEvent o1, DiaryCalendarEvent o2) {
             int result = Float.compare(o1.getYear(),o2.getYear());
             if (result == 0) {
                 result = Float.compare(o1.getMonth(), o2.getMonth());
@@ -30,7 +29,7 @@ public class CalendarEvent implements Parcelable {
     private String description;
     private boolean expanded;
 
-    public CalendarEvent(String title, int year,int month, int day, String description) {
+    public DiaryCalendarEvent(String title, int year, int month, int day, String description) {
         this.title = title;
         this.year = year;
         this.month = month;
@@ -39,7 +38,7 @@ public class CalendarEvent implements Parcelable {
         this.expanded = false;
     }
 
-    protected CalendarEvent(Parcel in) {
+    DiaryCalendarEvent(Parcel in) {
         title = in.readString();
         year = in.readInt();
         month = in.readInt();
@@ -48,15 +47,15 @@ public class CalendarEvent implements Parcelable {
         expanded = in.readByte() != 0;
     }
 
-    public static final Creator<CalendarEvent> CREATOR = new Creator<CalendarEvent>() {
+    public static final Creator<DiaryCalendarEvent> CREATOR = new Creator<DiaryCalendarEvent>() {
         @Override
-        public CalendarEvent createFromParcel(Parcel in) {
-            return new CalendarEvent(in);
+        public DiaryCalendarEvent createFromParcel(Parcel in) {
+            return new DiaryCalendarEvent(in);
         }
 
         @Override
-        public CalendarEvent[] newArray(int size) {
-            return new CalendarEvent[size];
+        public DiaryCalendarEvent[] newArray(int size) {
+            return new DiaryCalendarEvent[size];
         }
     };
 

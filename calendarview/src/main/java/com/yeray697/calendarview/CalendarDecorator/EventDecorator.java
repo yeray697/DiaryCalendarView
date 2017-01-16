@@ -9,7 +9,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Decorate several days with a dot
+ * Decorate event days with a dot
+ * @author yeray697
  */
 public class EventDecorator implements DayViewDecorator {
 
