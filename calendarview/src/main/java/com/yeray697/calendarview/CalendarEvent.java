@@ -28,6 +28,7 @@ public class CalendarEvent implements Parcelable {
     private String title;
     private int year,month,day;
     private String description;
+    private boolean expanded;
 
     public CalendarEvent(String title, int year,int month, int day, String description) {
         this.title = title;
@@ -35,6 +36,7 @@ public class CalendarEvent implements Parcelable {
         this.month = month;
         this.day = day;
         this.description = description;
+        this.expanded = false;
     }
 
     protected CalendarEvent(Parcel in) {
@@ -43,6 +45,7 @@ public class CalendarEvent implements Parcelable {
         month = in.readInt();
         day = in.readInt();
         description = in.readString();
+        expanded = in.readByte() != 0;
     }
 
     public static final Creator<CalendarEvent> CREATOR = new Creator<CalendarEvent>() {
@@ -101,6 +104,14 @@ public class CalendarEvent implements Parcelable {
         this.description = description;
     }
 
+    boolean isExpanded() {
+        return expanded;
+    }
+
+    void invertExpand() {
+        this.expanded = !expanded;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -113,5 +124,6 @@ public class CalendarEvent implements Parcelable {
         dest.writeInt(month);
         dest.writeInt(day);
         dest.writeString(description);
+        dest.writeByte((byte) (expanded ? 1 : 0));
     }
 }

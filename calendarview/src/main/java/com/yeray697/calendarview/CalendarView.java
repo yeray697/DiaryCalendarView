@@ -47,6 +47,7 @@ public class CalendarView extends RelativeLayout {
     private LinearLayout llDate;
     private ImageView ivDate;
     private TextView tvDate;
+    private boolean expanded;
 
     private float initialYimageView;
     private ArrayList<CalendarEvent> events;
@@ -75,6 +76,7 @@ public class CalendarView extends RelativeLayout {
 
     private void inflateView() {
         final View view = LayoutInflater.from(getContext()).inflate(R.layout.calendarview,this,true);
+        expanded = true;
         rvEvents = (RecyclerView) view.findViewById(R.id.rvCalendar);
         toolbar = (Toolbar) findViewById(R.id.toolbar_calendar);
         llDate = (LinearLayout) findViewById(R.id.llDate_calendar);
@@ -111,11 +113,12 @@ public class CalendarView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 int rotation = 0;
-                if (ivDate.getRotation() == rotation) {
+                if (expanded) {
                     rotation = 180;
-                    ViewAnimationUtils.collapse(calendar,500);
+                    ViewAnimationUtils.collapse(calendar);
                 } else
-                    ViewAnimationUtils.expand(calendar,500);
+                    ViewAnimationUtils.expand(calendar);
+                expanded = !expanded;
                 ivDate.animate().rotation(rotation).start();
             }
         });

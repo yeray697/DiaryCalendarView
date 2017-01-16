@@ -39,7 +39,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
 
     @Override
     public void onBindViewHolder(final Holder holder, int position) {
-        CalendarEvent event = events.get(position);
+        final CalendarEvent event = events.get(position);
         holder.tvTitle.setText(event.getTitle());
         holder.tvDate.setText(event.getDate());
         holder.tvDescription.setText(event.getDescription());
@@ -52,6 +52,31 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
                 holder.rlHead.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.selected_day_diary));
             else
                 holder.rlHead.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.background_item_not_expanded));
+        }
+
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int rotation = 180;
+                if (event.isExpanded()) {
+                    rotation = 0;
+                    ViewAnimationUtils.collapse(holder.rlBody,200);
+                } else
+                    ViewAnimationUtils.expand(holder.rlBody,200);
+                event.invertExpand();
+                holder.btExpandCollapse.animate().rotation(rotation).start();
+            }
+        });
+        if (event.isExpanded()) {
+            holder.rlBody.setVisibility(View.VISIBLE);
+            holder.btExpandCollapse.setRotation(180);
+            holder.rlBody.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        else {
+            holder.rlBody.setVisibility(View.GONE);
+            holder.btExpandCollapse.setRotation(0);
+            holder.rlBody.getLayoutParams().height = 0;
         }
     }
 
@@ -97,12 +122,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
     }
 
     class Holder extends RecyclerView.ViewHolder {
+        View root;
         RelativeLayout rlHead,rlBody;
         TextView tvTitle, tvDate, tvDescription;
         ImageView btExpandCollapse;
 
         public Holder(View itemView) {
             super(itemView);
+            root = itemView;
             tvTitle = (TextView) itemView.findViewById(R.id.tvCalendarTitle_item);
             tvDate = (TextView) itemView.findViewById(R.id.tvCalendarDate_item);
             tvDescription = (TextView) itemView.findViewById(R.id.tvCalendarDescription_item);
@@ -110,18 +137,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Holder
             rlHead = (RelativeLayout) itemView.findViewById(R.id.header_item);
             rlBody = (RelativeLayout) itemView.findViewById(R.id.body_item);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int rotation = 180;
-                    if (btExpandCollapse.getRotation() == rotation) {
-                        rotation = 0;
-                        ViewAnimationUtils.collapse(rlBody,200);
-                    } else
-                        ViewAnimationUtils.expand(rlBody,200);
-                    btExpandCollapse.animate().rotation(rotation).start();
-                }
-            });
             rlBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
