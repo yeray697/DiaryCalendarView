@@ -38,6 +38,7 @@
         android:id="@+id/calendarview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:mcv_selectionColor="@color/selected_day"
         android:background="@color/calendar_background"
         android:elevation="5dp"/>
     <android.support.v7.widget.RecyclerView

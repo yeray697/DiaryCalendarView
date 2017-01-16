@@ -47,7 +47,6 @@ import java.util.List;
 public class DiaryCalendarView extends RelativeLayout {
 
     private final SelectedDayDecorator selectedDayDecorator = new SelectedDayDecorator((Activity)this.getContext());
-    private final CurrentDayDecorator currentDayDecorator = new CurrentDayDecorator((Activity)this.getContext());
     private MaterialCalendarView calendar;
     private RecyclerView rvEvents;
     private Toolbar toolbar;
@@ -114,7 +113,7 @@ public class DiaryCalendarView extends RelativeLayout {
         calendar.removeDecorators();
         calendar.addDecorators(
                 selectedDayDecorator,
-                currentDayDecorator);
+                new CurrentDayDecorator((Activity)this.getContext()));
         calendar.setTopbarVisible(false);
         llDate.setOnClickListener(new OnClickListener() {
             @Override
@@ -280,8 +279,7 @@ public class DiaryCalendarView extends RelativeLayout {
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state)
-    {
+    public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) // implicit null check
         {
             Bundle bundle = (Bundle) state;
@@ -294,7 +292,9 @@ public class DiaryCalendarView extends RelativeLayout {
             setSelectedEvent(bundle.getInt("selected_position",-1));
             rvEvents.getLayoutManager().scrollToPosition(bundle.getInt("scroll_position",0));
 
-            selectedDayDecorator.setDate(((CalendarDay) bundle.getParcelable("selected_day")).getDate());
+            CalendarDay selected = bundle.getParcelable("selected_day");
+            if (selected != null)
+                selectedDayDecorator.setDate(selected.getDate());
         }
         super.onRestoreInstanceState(state);
     }
