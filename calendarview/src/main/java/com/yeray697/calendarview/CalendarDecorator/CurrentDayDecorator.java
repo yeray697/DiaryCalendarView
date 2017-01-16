@@ -3,6 +3,7 @@ package com.yeray697.calendarview.CalendarDecorator;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.style.StyleSpan;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -19,7 +20,7 @@ public class CurrentDayDecorator implements DayViewDecorator {
     private final Drawable drawable;
 
     public CurrentDayDecorator(Activity context) {
-        drawable = context.getResources().getDrawable(R.drawable.current_day);
+        drawable = ContextCompat.getDrawable(context,R.drawable.current_day);
     }
 
     @Override

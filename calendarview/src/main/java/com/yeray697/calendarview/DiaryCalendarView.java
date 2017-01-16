@@ -2,16 +2,22 @@ package com.yeray697.calendarview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,7 +47,7 @@ import java.util.List;
 public class DiaryCalendarView extends RelativeLayout {
 
     private final SelectedDayDecorator selectedDayDecorator = new SelectedDayDecorator((Activity)this.getContext());
-
+    private final CurrentDayDecorator currentDayDecorator = new CurrentDayDecorator((Activity)this.getContext());
     private MaterialCalendarView calendar;
     private RecyclerView rvEvents;
     private Toolbar toolbar;
@@ -49,10 +55,9 @@ public class DiaryCalendarView extends RelativeLayout {
     private ImageView ivDate;
     private TextView tvDate;
 
-    private boolean expanded;
+    private boolean expanded = true;
     private ArrayList<DiaryCalendarEvent> events;
     private DiaryCalendarAdapter adapter;
-
 
 
     public DiaryCalendarView(Context context) {
@@ -82,7 +87,6 @@ public class DiaryCalendarView extends RelativeLayout {
      */
     private void inflateView() {
         final View view = LayoutInflater.from(getContext()).inflate(R.layout.calendarview,this,true);
-        expanded = true;
         rvEvents = (RecyclerView) view.findViewById(R.id.rvCalendar);
         toolbar = (Toolbar) findViewById(R.id.toolbar_calendar);
         llDate = (LinearLayout) findViewById(R.id.llDate_calendar);
@@ -96,8 +100,6 @@ public class DiaryCalendarView extends RelativeLayout {
                 selectedDayDecorator.setDate(date.getDate());
                 widget.invalidateDecorators();
                 int position = checkDates(date);
-                if (position != -1)
-                    rvEvents.getLayoutManager().scrollToPosition(position);
                 setSelectedEvent(position);
             }
         });
@@ -109,10 +111,10 @@ public class DiaryCalendarView extends RelativeLayout {
             }
         });
         calendar.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
+        calendar.removeDecorators();
         calendar.addDecorators(
                 selectedDayDecorator,
-                new CurrentDayDecorator((Activity)this.getContext())
-        );
+                currentDayDecorator);
         calendar.setTopbarVisible(false);
         llDate.setOnClickListener(new OnClickListener() {
             @Override
@@ -131,6 +133,22 @@ public class DiaryCalendarView extends RelativeLayout {
 
         adapter = new DiaryCalendarAdapter(getContext(), events);
         rvEvents.setAdapter(adapter);
+
+        manageScreenConfiguration();
+    }
+
+    /**
+     * Hide calendar if it is not portrait mode
+     * Show calendar it it is portrait mode
+     */
+    private void manageScreenConfiguration() {
+        if (Configuration.ORIENTATION_PORTRAIT == getResources().getConfiguration().orientation) {
+            llDate.setVisibility(VISIBLE);
+            calendar.setVisibility(VISIBLE);
+        } else {
+            llDate.setVisibility(GONE);
+            calendar.setVisibility(GONE);
+        }
     }
 
     /**
@@ -180,6 +198,8 @@ public class DiaryCalendarView extends RelativeLayout {
         if (currentViewHolder != null)
             currentView = currentViewHolder.itemView;
         adapter.setSelectedEvent(lastPosition, lastView,position,currentView);
+        if (position != -1)
+            rvEvents.getLayoutManager().scrollToPosition(position);
     }
 
     /**
@@ -244,5 +264,38 @@ public class DiaryCalendarView extends RelativeLayout {
      */
     public Toolbar getToolbar(){
         return toolbar;
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("superState", super.onSaveInstanceState());
+        bundle.putBoolean("expanded", this.expanded);
+        bundle.putInt("selected_position", adapter.getSelectedEvent());
+        bundle.putInt("scroll_position",rvEvents.computeVerticalScrollOffset());
+        bundle.putParcelable("selected_day",calendar.getSelectedDate());
+
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state)
+    {
+        if (state instanceof Bundle) // implicit null check
+        {
+            Bundle bundle = (Bundle) state;
+            this.expanded = bundle.getBoolean("expanded");
+            state = bundle.getParcelable("superState");
+            if (!expanded) {
+                ivDate.setRotation(180);
+                calendar.getLayoutParams().height = 0;
+            }
+            setSelectedEvent(bundle.getInt("selected_position",-1));
+            rvEvents.getLayoutManager().scrollToPosition(bundle.getInt("scroll_position",0));
+
+            selectedDayDecorator.setDate(((CalendarDay) bundle.getParcelable("selected_day")).getDate());
+        }
+        super.onRestoreInstanceState(state);
     }
 }
