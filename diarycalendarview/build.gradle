@@ -1,5 +1,11 @@
 apply plugin: 'com.android.library'
 
+ext {
+    PUBLISH_GROUP_ID = 'com.yeray697.diarycalendarview'
+    PUBLISH_ARTIFACT_ID = 'diarycalendarview'
+    PUBLISH_VERSION = '1.0.0'
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
@@ -18,6 +24,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
@@ -30,3 +40,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.prolificinteractive:material-calendarview:1.4.2'
 }
+
+// or use the remote copy to keep update with latest changes
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

@@ -40,16 +40,16 @@ public class DiaryCalendarAdapter extends RecyclerView.Adapter<DiaryCalendarAdap
 
     @Override
     public void onBindViewHolder(final Holder holder, int position) {
-        final DiaryCalendarEvent event = events.get(position);
+        final DiaryCalendarEvent event = events.get(holder.getAdapterPosition());
         holder.tvTitle.setText(event.getTitle());
         holder.tvDate.setText(event.getDate());
         holder.tvDescription.setText(event.getDescription());
 
         if (isToday(event.getDate())) {
-            this.currentEvent = position;
+            this.currentEvent = holder.getAdapterPosition();
             holder.rlHead.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.current_event));
         } else {
-            if (position == selectedEvent)
+            if (holder.getAdapterPosition() == selectedEvent)
                 holder.rlHead.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.selected_day_diary));
             else
                 holder.rlHead.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.background_item_not_expanded));
