@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryLight">#d4e2ea</color>
+    <color name="colorPrimary">#90CAF9</color>
+    <color name="colorPrimaryDark">#64B5F6</color>
+    <color name="colorAccent">#FF80AB</color>
+
+    <!-- Calendar colors -->
+    <color name="selected_day">#2196F3</color>
+    <color name="current_day" >@color/colorAccent</color>
+    <color name="selected_day_diary">@color/colorPrimaryDark</color>
+    <color name="background_item_not_expanded">#abd2f2</color>
+    <color name="background_item_expanded">@color/colorPrimaryLight</color>
+    <color name="calendar_background">@color/colorPrimary</color>
+    <color name="current_event">@color/colorAccent</color>
+</resources>

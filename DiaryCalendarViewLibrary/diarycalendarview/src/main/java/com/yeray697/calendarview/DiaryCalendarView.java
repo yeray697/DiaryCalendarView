@@ -6,18 +6,15 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,6 +44,7 @@ import java.util.List;
 public class DiaryCalendarView extends RelativeLayout {
 
     private final SelectedDayDecorator selectedDayDecorator = new SelectedDayDecorator((Activity)this.getContext());
+    private EventDecorator eventDecorator;
     private MaterialCalendarView calendar;
     private RecyclerView rvEvents;
     private Toolbar toolbar;
@@ -57,6 +55,8 @@ public class DiaryCalendarView extends RelativeLayout {
     private boolean expanded = true;
     private ArrayList<DiaryCalendarEvent> events;
     private DiaryCalendarAdapter adapter;
+    private int eventColor;
+    private int eventRadius;
 
 
     public DiaryCalendarView(Context context) {
@@ -102,7 +102,10 @@ public class DiaryCalendarView extends RelativeLayout {
                 setSelectedEvent(position);
             }
         });
+        this.eventColor = Color.BLUE;
+        this.eventRadius = 5;
         this.events = new ArrayList<>();
+        this.eventDecorator = new EventDecorator(eventColor,eventRadius,events);
         calendar.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
@@ -132,6 +135,7 @@ public class DiaryCalendarView extends RelativeLayout {
 
         adapter = new DiaryCalendarAdapter(getContext(), events);
         rvEvents.setAdapter(adapter);
+        calendar.addDecorator(eventDecorator);
 
         manageScreenConfiguration();
     }
@@ -204,31 +208,28 @@ public class DiaryCalendarView extends RelativeLayout {
     /**
      * Add a list of events to the calendary and the diary that will be marked into the calendary as a dot
      * @param newEvents Events to add
-     * @param color Dot color
-     * @param radius Dot radius
      */
-    public void addEvent(List<? extends DiaryCalendarEvent> newEvents, int color, int radius) {
+    public void addEvent(List<? extends DiaryCalendarEvent> newEvents) {
+        if (events == null)
+            this.events = new ArrayList<>();
         this.events.addAll(newEvents);
         ArrayList<CalendarDay> days = new ArrayList<>();
         for(DiaryCalendarEvent event:events) {
             days.add(new CalendarDay(event.getYear(),event.getMonth(),event.getDay()));
+            eventDecorator.add(event);
         }
-
-        calendar.addDecorator(new EventDecorator(color,radius, days));
-
+        calendar.invalidateDecorators();
         adapter.sortEvents();
     }
 
     /**
      * Add an event to the calendary and the diary that will be marked into the calendary as a dot
      * @param newEvent Event to add
-     * @param color Dot color
-     * @param radius Dot radius
      */
-    public void addEvent(DiaryCalendarEvent newEvent , int color, int radius) {
+    public void addEvent(DiaryCalendarEvent newEvent) {
         ArrayList<DiaryCalendarEvent> event = new ArrayList<>();
         event.add(newEvent);
-        addEvent(event, color, radius);
+        addEvent(event);
     }
 
     /**
@@ -273,8 +274,10 @@ public class DiaryCalendarView extends RelativeLayout {
         bundle.putBoolean("expanded", this.expanded);
         bundle.putInt("selected_position", adapter.getSelectedEvent());
         bundle.putInt("scroll_position",rvEvents.computeVerticalScrollOffset());
+        bundle.putInt("eventRadius", eventRadius);
+        bundle.putInt("eventColor",eventColor);
         bundle.putParcelable("selected_day",calendar.getSelectedDate());
-
+        bundle.putParcelableArrayList("events",events);
         return bundle;
     }
 
@@ -290,12 +293,66 @@ public class DiaryCalendarView extends RelativeLayout {
                 calendar.getLayoutParams().height = 0;
             }
             setSelectedEvent(bundle.getInt("selected_position",-1));
+            this.eventRadius = bundle.getInt("eventRadius",5);
+            this.eventColor = bundle.getInt("eventColor",Color.BLUE);
             rvEvents.getLayoutManager().scrollToPosition(bundle.getInt("scroll_position",0));
 
             CalendarDay selected = bundle.getParcelable("selected_day");
             if (selected != null)
                 selectedDayDecorator.setDate(selected.getDate());
+            if (events == null)
+                events = new ArrayList<>();
+            addEvent(bundle.<DiaryCalendarEvent>getParcelableArrayList("events"));
         }
         super.onRestoreInstanceState(state);
+    }
+
+    public int getEventColor() {
+        return eventColor;
+    }
+
+    public void setEventColor(int eventColor) {
+        if (this.eventColor != eventColor) {
+            this.eventColor = eventColor;
+            ArrayList<DiaryCalendarEvent> tmp = new ArrayList<>(events);
+            clearEvents();
+            addEvent(tmp);
+            eventDecorator.setColor(eventColor);
+        }
+    }
+
+    public int getEventRadius() {
+        return eventRadius;
+    }
+
+    public void setEventRadius(int eventRadius) {
+        if (this.eventRadius != eventRadius) {
+            this.eventRadius = eventRadius;
+            ArrayList<DiaryCalendarEvent> tmp = new ArrayList<>(events);
+            clearEvents();
+            addEvent(tmp);
+            eventDecorator.setRadius(eventRadius);
+        }
+    }
+
+    public void clearEvents() {
+        if (events != null)
+            events.clear();
+    }
+
+    public ArrayList<DiaryCalendarEvent> getEvents(){
+        return events;
+    }
+
+    public DiaryCalendarEvent getEventAtPosition(int position){
+        return events.get(position);
+    }
+
+    public void remove(DiaryCalendarEvent event) {
+        if(events.remove(event)) {
+            adapter.sortEvents();
+            eventDecorator.remove(event);
+            calendar.invalidateDecorators();
+        }
     }
 }

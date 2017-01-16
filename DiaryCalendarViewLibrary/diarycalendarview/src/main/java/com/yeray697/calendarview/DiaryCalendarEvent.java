@@ -38,7 +38,7 @@ public class DiaryCalendarEvent implements Parcelable {
         this.expanded = false;
     }
 
-    DiaryCalendarEvent(Parcel in) {
+    public DiaryCalendarEvent(Parcel in) {
         title = in.readString();
         year = in.readInt();
         month = in.readInt();
