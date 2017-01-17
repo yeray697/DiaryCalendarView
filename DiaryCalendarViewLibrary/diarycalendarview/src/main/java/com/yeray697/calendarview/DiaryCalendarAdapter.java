@@ -43,7 +43,7 @@ import java.util.Collections;
  * @author yeray697
  */
 
-public class DiaryCalendarAdapter extends RecyclerView.Adapter<DiaryCalendarAdapter.Holder> {
+class DiaryCalendarAdapter extends RecyclerView.Adapter<DiaryCalendarAdapter.Holder> {
 
     private  Context context;
     private ArrayList<DiaryCalendarEvent> events;

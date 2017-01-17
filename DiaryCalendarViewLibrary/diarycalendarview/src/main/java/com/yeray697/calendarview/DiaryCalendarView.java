@@ -289,7 +289,7 @@ public class DiaryCalendarView extends RelativeLayout {
     }
 
     @Override
-    public Parcelable onSaveInstanceState()
+    protected Parcelable onSaveInstanceState()
     {
         Bundle bundle = new Bundle();
         bundle.putParcelable("superState", super.onSaveInstanceState());
@@ -304,7 +304,7 @@ public class DiaryCalendarView extends RelativeLayout {
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    protected void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) // implicit null check
         {
             Bundle bundle = (Bundle) state;
