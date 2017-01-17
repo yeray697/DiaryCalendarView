@@ -37,18 +37,34 @@ public class EventDecorator implements DayViewDecorator {
         this.dates = new HashSet<>(dates);
     }
 
+    /**
+     * Remove an event from the list
+     * @param event Event that will be removed
+     */
     public void remove(DiaryCalendarEvent event){
         this.dates.remove(new CalendarDay(event.getYear(),event.getMonth(),event.getDay()));
     }
 
+    /**
+     * Add an event into the list
+     * @param event Event that will be added
+     */
     public void add(DiaryCalendarEvent event){
         this.dates.add(new CalendarDay(event.getYear(),event.getMonth(),event.getDay()));
     }
 
+    /**
+     * Change the dot color
+     * @param color Color that will be used
+     */
     public void setColor(int color) {
         this.color = color;
     }
 
+    /**
+     * Change the dot radius
+     * @param radius Radius that will be used
+     */
     public void setRadius(int radius) {
         this.radius = radius;
     }

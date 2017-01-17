@@ -307,10 +307,18 @@ public class DiaryCalendarView extends RelativeLayout {
         super.onRestoreInstanceState(state);
     }
 
+    /**
+     * Get the dot color used to draw events
+     * @return Return a color
+     */
     public int getEventColor() {
         return eventColor;
     }
 
+    /**
+     * Set the dot color used to draw events
+     * @param eventColor New color used
+     */
     public void setEventColor(int eventColor) {
         if (this.eventColor != eventColor) {
             this.eventColor = eventColor;
@@ -321,10 +329,18 @@ public class DiaryCalendarView extends RelativeLayout {
         }
     }
 
+    /**
+     * Get the dot radius used to draw events
+     * @return Return a radius int
+     */
     public int getEventRadius() {
         return eventRadius;
     }
 
+    /**
+     * Set the dot radius used to draw events
+     * @param eventRadius New radius used
+     */
     public void setEventRadius(int eventRadius) {
         if (this.eventRadius != eventRadius) {
             this.eventRadius = eventRadius;
@@ -335,19 +351,35 @@ public class DiaryCalendarView extends RelativeLayout {
         }
     }
 
+    /**
+     * Clear events list
+     */
     public void clearEvents() {
         if (events != null)
             events.clear();
     }
 
+    /**
+     * Get events drawn
+     * @return ArrayList of events
+     */
     public ArrayList<DiaryCalendarEvent> getEvents(){
         return events;
     }
 
+    /**
+     * Get an event by his position from the list
+     * @param position Position of the event
+     * @return Return an event
+     */
     public DiaryCalendarEvent getEventAtPosition(int position){
         return events.get(position);
     }
 
+    /**
+     * Remove an event form the list
+     * @param event Event that will be removed
+     */
     public void remove(DiaryCalendarEvent event) {
         if(events.remove(event)) {
             adapter.sortEvents();
