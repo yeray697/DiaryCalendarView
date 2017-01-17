@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/DiaryCalendarView-v1.0/DiaryCalendarView-v1.0.iml" filepath="$PROJECT_DIR$/DiaryCalendarView-v1.0/DiaryCalendarView-v1.0.iml" />
       <module fileurl="file://$PROJECT_DIR$/DiaryCalendarViewSample.iml" filepath="$PROJECT_DIR$/DiaryCalendarViewSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/diarycalendarview/diarycalendarview.iml" filepath="$PROJECT_DIR$/diarycalendarview/diarycalendarview.iml" />
     </modules>
   </component>
 </project>

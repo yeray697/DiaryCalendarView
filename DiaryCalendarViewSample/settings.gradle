@@ -1,1 +1,1 @@
-include ':app', ':diarycalendarview'
+include ':app', ':DiaryCalendarView-v1.0'

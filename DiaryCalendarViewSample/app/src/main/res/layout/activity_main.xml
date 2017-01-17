@@ -15,13 +15,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btRemoveLastEvent"
-            android:text="Remove last event"/>
+            android:text="Remove last event"
+            android:visibility="gone"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btAddEvent"
-            android:text="Add a random event"/>
+            android:text="Add a random event"
+            android:visibility="gone"/>
 
     </LinearLayout>
     <com.yeray697.calendarview.DiaryCalendarView

@@ -4,11 +4,9 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.yeray697.calendarview.DiaryCalendarEvent;
 import com.yeray697.calendarview.DiaryCalendarView;
 
@@ -50,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btRemoveLastEvent).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendar.remove(calendar.getEventAtPosition(calendar.getEvents().size() - 1));
+                int position = calendar.getEvents().size() - 1;
+                if (position >= 0)
+                    calendar.remove(calendar.getEventAtPosition(position));
             }
         });
         findViewById(R.id.btAddEvent).setOnClickListener(new View.OnClickListener() {

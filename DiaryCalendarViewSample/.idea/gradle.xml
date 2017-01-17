@@ -8,8 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/DiaryCalendarView-v1.0" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/diarycalendarview" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
