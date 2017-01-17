@@ -47,6 +47,30 @@ public DiaryCalendarEvent getEventAtPosition(int position)
 public void remove(DiaryCalendarEvent event)
 ```
 
+### Customization
+You can only customize the attributes with the methods in the previous section
+But you can override the colors and dimensions used
+```
+    <dimen name="radio_calendar_day">12dp</dimen>
+    <dimen name="border_day_size">1dp</dimen>
+```
+```
+    <color name="selected_day">#4484d2</color>
+    <color name="calendar_background">#6db6f1</color>
+    <color name="current_day" >#FF4081</color>
+    <color name="background_item_not_expanded">#7124f9</color>
+    <color name="background_item_expanded">#9663ef</color>
+    <color name="selected_day_diary">#33ff00</color>
+    <color name="current_event">#FF4081</color>
+```
+If you want to further customize it, use
+```
+public void setCalendar(MaterialCalendarView calendar)
+public MaterialCalendarView getCalendar()
+```
+(more info about MaterialCalendarView class [here](https://github.com/prolificinteractive/material-calendarview/)
+or create your own version of this library
+
 
 
 MIT LICENSE
