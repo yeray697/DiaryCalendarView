@@ -1,8 +1,10 @@
-How do I use it?
-===============
-## Screenshots
+Screenshots
+===========
 ![](https://github.com/yeray697/DiaryCalendarView/blob/master/resources/DiaryCalendarView.gif)
 ![](https://github.com/yeray697/DiaryCalendarView/blob/master/resources/DiaryCalendarView.png)
+
+How do I use it?
+=========
 ## Setup
 
 #### Dependencies
