@@ -2,5 +2,4 @@
 <resources>
     <dimen name="radio_calendar_day">12dp</dimen>
     <dimen name="border_day_size">1dp</dimen>
-    <dimen name="ivexpand_size">25dp</dimen>
 </resources>
