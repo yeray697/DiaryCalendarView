@@ -36,8 +36,8 @@ class ViewAnimationUtils {
      * Expand a view from current height to WRAP_CONTENT height
      * @param v View that will be expanded
      */
-    static void expand(final View v) {
-        expand(v,500);
+    static void expand(final View v,int targetHeight) {
+        expand(v,targetHeight,500);
     }
 
     /**
@@ -53,7 +53,7 @@ class ViewAnimationUtils {
      * @param v View that will be expanded
      * @param duration Duration of the animation
      */
-    static void expand(final View v, int duration) {
+    static void expand(final View v,final int targetHeight, int duration) {
         if (v != null) {
             Animation a;
             a = v.getAnimation();
@@ -61,7 +61,6 @@ class ViewAnimationUtils {
                 a.cancel();
                 v.clearAnimation();
             }
-            final int targetHeight = getMaxHeight(v);
             final int initialHeight = (v.getLayoutParams().height<0)?0:v.getLayoutParams().height;
             v.getLayoutParams().height = initialHeight;
             v.setVisibility(View.VISIBLE);
@@ -95,8 +94,8 @@ class ViewAnimationUtils {
                 a.cancel();
                 v.clearAnimation();
             }
-            final int initialHeight = (v.getHeight() == 0) ? getMaxHeight(v) : v.getHeight();
 
+            final int initialHeight = (v.getHeight() == 0) ? getMaxHeight(v) : v.getHeight();
             a = new Animation() {
                 @Override
                 protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -123,11 +122,11 @@ class ViewAnimationUtils {
      * @param v View from we will get the max height
      * @return Return the max height
      */
-    private static int getMaxHeight(View v){
+    static int getMaxHeight(View v){
         int lastHeight = v.getLayoutParams().height;
         v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int targtetHeight = v.getMeasuredHeight();
+        int targetHeight = v.getMeasuredHeight();
         v.getLayoutParams().height = lastHeight;
-        return targtetHeight;
+        return targetHeight;
     }
 }

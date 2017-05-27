@@ -86,7 +86,7 @@ class DiaryCalendarAdapter extends RecyclerView.Adapter<DiaryCalendarAdapter.Hol
                     rotation = 0;
                     ViewAnimationUtils.collapse(holder.rlBody,200);
                 } else
-                    ViewAnimationUtils.expand(holder.rlBody,200);
+                    ViewAnimationUtils.expand(holder.rlBody,ViewAnimationUtils.getMaxHeight(holder.rlBody),200);
                 event.invertExpand();
                 holder.btExpandCollapse.animate().rotation(rotation).start();
             }

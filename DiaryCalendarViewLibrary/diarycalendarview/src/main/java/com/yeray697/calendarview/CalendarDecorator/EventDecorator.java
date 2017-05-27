@@ -91,6 +91,12 @@ public class EventDecorator implements DayViewDecorator {
         this.radius = radius;
     }
 
+    /**
+     * Clear the list of dates
+     */
+    public void clear() {
+        this.dates = new HashSet<>();
+    }
     @Override
     public boolean shouldDecorate(CalendarDay day) {
         return dates.contains(day);

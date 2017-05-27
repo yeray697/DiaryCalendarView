@@ -37,6 +37,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -140,6 +141,16 @@ public class DiaryCalendarView extends RelativeLayout {
                 selectedDayDecorator,
                 new CurrentDayDecorator((Activity)this.getContext()));
         calendar.setTopbarVisible(false);
+        this.calendar.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+        {
+            @Override
+            public boolean onPreDraw()
+            {
+                calendar.getViewTreeObserver().removeOnPreDrawListener(this);
+                calendar.setTag(calendar.getHeight());
+                return false;
+            }
+        });
         llDate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +159,7 @@ public class DiaryCalendarView extends RelativeLayout {
                     rotation = 180;
                     ViewAnimationUtils.collapse(calendar);
                 } else
-                    ViewAnimationUtils.expand(calendar);
+                    ViewAnimationUtils.expand(calendar, (Integer) calendar.getTag());
                 expanded = !expanded;
                 ivDate.animate().rotation(rotation).start();
             }
@@ -187,21 +198,22 @@ public class DiaryCalendarView extends RelativeLayout {
         boolean isToday;
         int result = -1;
         int position = 0;
-        for (DiaryCalendarEvent event: events) {
-            try {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dfDate.parse(event.getDate()));
-                isToday = dateClicked.getYear() == event.getYear() && dateClicked.getMonth() == event.getMonth() && dateClicked.getDay() == event.getDay();
-                if (isToday) {
-                    result = position;
-                    break;
-                } else {
-                    position ++;
+        if(dateClicked != null) {
+            for (DiaryCalendarEvent event : events) {
+                try {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dfDate.parse(event.getDate()));
+                    isToday = dateClicked.getYear() == event.getYear() && dateClicked.getMonth() == event.getMonth() && dateClicked.getDay() == event.getDay();
+                    if (isToday) {
+                        result = position;
+                        break;
+                    } else {
+                        position++;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
-
         }
 
         return result;
@@ -240,8 +252,10 @@ public class DiaryCalendarView extends RelativeLayout {
             days.add(new CalendarDay(event.getYear(),event.getMonth(),event.getDay()));
             eventDecorator.add(event);
         }
-        calendar.invalidateDecorators();
         adapter.sortEvents();
+        int position = checkDates(calendar.getSelectedDate());
+        setSelectedEvent(position);
+        calendar.invalidateDecorators();
     }
 
     /**
@@ -379,6 +393,9 @@ public class DiaryCalendarView extends RelativeLayout {
     public void clearEvents() {
         if (events != null)
             events.clear();
+        setSelectedEvent(-1);
+        eventDecorator.clear();
+        calendar.invalidateDecorators();
     }
 
     /**
